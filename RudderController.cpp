@@ -55,7 +55,7 @@ void RudderController::print_state()
  * 
  * Maximale uitslagen worden continue aangepast indien nodig
  * Dit is dan eens soort van dynamishce initialisatie
- * Voor vertrek moet dan ook het roer helemaal heen en weeer geweest zijn. 
+ * Voor vertrek moet dan ook het roer helemaal heen en weer geweest zijn. 
  * 
  * 
  */
