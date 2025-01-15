@@ -1,10 +1,11 @@
 /*
   RudderController.h - Library for displaying Rudder status.
+  Rename To RudderMonitor.h
   Created by Gert-Jan Braas
   Released into the public domain.
 
   The controller is self-priming. 
-  full-priming is reached when max-sb and max-bb have been 
+  full-priming is reached when max-sb and max-bb have been aquired.
   
 */
 #ifndef RudderController_h

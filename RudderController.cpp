@@ -11,7 +11,7 @@ void RudderController::begin()
 {
   Serial.println("Rudder Initial Startup:");
   _rudder_angle_pointer_initialized = false;
-  raw = -1;
+  raw = -1; // from 0 to 1023
   prev_raw = -1;
   _measure_sensitivity = 10; // 1 = high, 100 = quite low 1023 = no sensitivity at all
   // als gevoeligheid 10 is, worden de laatste en eerste 9 'units' niet gepakt. (of daar is dan een kans toe.)
@@ -27,13 +27,11 @@ void RudderController::begin()
   Vdelta_medium_range_valid = 0.090; // sensitivity of rudder angle measurement (max-sb, max-bb)
   Vdelta_wide_range_valid   = 0.150; // sensitivity of rudder angle measurement (max-sb, max-bb)
 
-
   max_bb_shown = false;
   bb_shown = false;
   max_sb_shown = false;
   sb_shown = false;
   rudder_center_shown= false;
-
 }
 
 void RudderController::print_state()
@@ -57,7 +55,8 @@ void RudderController::print_state()
  * Dit is dan eens soort van dynamishce initialisatie
  * Voor vertrek moet dan ook het roer helemaal heen en weer geweest zijn. 
  * 
- * 
+ * return: true when updated,
+           false otherwise
  */
 bool RudderController::update_state()
 {
