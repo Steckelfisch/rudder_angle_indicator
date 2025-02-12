@@ -36,10 +36,10 @@ class RudderController
     RudderController(int pinRudder);
     void begin(void);
     void print_state();
-    bool update_state();
+    bool update_state(); // return: true is changed, false otherwise
     
   private:
-    int _analogPin = 0;
+    int _rudderPin = 0;
     int raw;
     int prev_raw;
     int _measure_sensitivity; // 1 = high, 100 = quite low. This is to counter ubersensitive measuring 
@@ -51,7 +51,7 @@ class RudderController
     float Vrudder_center;// = 0;
     //float volts;// = 0;
     bool _rudder_angle_pointer_initialized;// = false;
-    float Vminimal_delta_range;// = 1.200; // minimal Vdelta_max for rudderangle pointer to work
+    float Vminimal_delta_range;// = 1.200; // minimal Vdelta_max for rudderangle pointer to start working
     float Vdelta_narrow_range_valid;// = 0.020; // sensitivity of rudder angle measurement (center)
     float Vdelta_medium_range_valid;// = 0.090; // sensitivity of rudder angle measurement (max-sb,max-bb)
     float Vdelta_wide_range_valid;//   = 0.150; // sensitivity of rudder angle measurement (max-sb,max-bb)
@@ -65,9 +65,9 @@ class RudderController
     bool rudderInRange(float Vref, float delta_v_range_valid);
     void setRudderMaxBB(float Vrudder);
     void setRudderMaxSB(float Vrudder);
-    bool checkRudderDC();
-    void checkRudderBB();
-    void checkRudderSB();
+    bool checkRudderDC();  // check Dead Center
+    void checkRudderBB();  // Port (BakBoord)
+    void checkRudderSB();  // Starboard (StuurBoord)
     void signalNotInitialized();
 };
 

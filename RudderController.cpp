@@ -5,11 +5,12 @@
 
 RudderController::RudderController(int pinRudder)
 {
+  _rudderPin = pinRudder;
 }
 
 void RudderController::begin()
 {
-  Serial.println("Rudder Initial Startup:");
+  Serial.print("Rudder Initial Startup ");
   _rudder_angle_pointer_initialized = false;
   raw = -1; // from 0 to 1023
   prev_raw = -1;
@@ -22,6 +23,7 @@ void RudderController::begin()
   Vrudder_max = 0;  // will move to Vin
   Vdelta_max = 0;
   Vrudder_center = 0;
+  Serial.print("..");
   Vminimal_delta_range = 4.200; // minimal Vdelta_max for rudderangle pointer to work
   Vdelta_narrow_range_valid = 0.020; // sensitivity of rudder angle measurement (center)
   Vdelta_medium_range_valid = 0.090; // sensitivity of rudder angle measurement (max-sb, max-bb)
@@ -32,6 +34,7 @@ void RudderController::begin()
   max_sb_shown = false;
   sb_shown = false;
   rudder_center_shown= false;
+  Serial.println(" Done");
 }
 
 void RudderController::print_state()
@@ -52,7 +55,7 @@ void RudderController::print_state()
 /**
  * 
  * Maximale uitslagen worden continue aangepast indien nodig
- * Dit is dan eens soort van dynamishce initialisatie
+ * Dit is dan eens soort van dynamische initialisatie
  * Voor vertrek moet dan ook het roer helemaal heen en weer geweest zijn. 
  * 
  * return: true when updated,
@@ -60,11 +63,11 @@ void RudderController::print_state()
  */
 bool RudderController::update_state()
 {
-  raw = analogRead(_analogPin);
-
+  raw = analogRead(_rudderPin);
+  // Serial.print("raw: ");  Serial.println(raw, DEC);
   if (abs(raw-prev_raw) > 1)
-  { // een uitslagverschil is waargenomen 
-    // dit zit nu op '1' zodat we altijd de maximale update krijgen
+  { // Er is _een_ uitslagverschil waargenomen.
+    // dit zit nu op '1' (maximale gevoeligheid) zodat we altijd de maximale update krijgen
     // hiermee worden de mini en maxi uitersten bepaald
     Vrudder = (raw*Vin) / 1024.0;
     // (her)bepaal maximale uitslag SB
@@ -76,11 +79,6 @@ bool RudderController::update_state()
   if (abs(raw-prev_raw) > _measure_sensitivity)
   { // minimale uitslagverschil is waargenomen 
     Vrudder = (raw*Vin) / 1024.0;
-
-    // (her)bepaal maximale uitslag SB
-    //setRudderMaxSB(Vrudder);
-    // (her)bepaal maximale uitslag BB
-    //setRudderMaxBB(Vrudder);
 
     // als nog niet geinitialiseerd, en minimale meetbereik is nu wel gevonden,
     // geef aan dat dat roeraanwijzer nu wel geinitialiseerd
@@ -166,7 +164,7 @@ void  RudderController::setRudderMaxSB(float Vrudder) {
 }
 
 void  RudderController::checkRudderBB() {
-      Serial.println("checkRudderBB");
+      Serial.print("checkRudderBB ");
       if (rudderInRange(Vrudder_min, Vdelta_wide_range_valid))
       {
         if (max_bb_shown == false)
@@ -189,7 +187,7 @@ void  RudderController::checkRudderBB() {
 
 
 void  RudderController::checkRudderSB() {
-      Serial.println("checkRudderSB");
+      Serial.print("checkRudderSB ");
       if (rudderInRange(Vrudder_max, Vdelta_wide_range_valid))
       {
         if (max_sb_shown == false)
@@ -208,7 +206,7 @@ void  RudderController::checkRudderSB() {
 }
 
 bool  RudderController::checkRudderDC() { //DeadCenter
-      Serial.println("checkRudderDC");
+      Serial.print("checkRudderDC ");
       if (rudderInRange(Vrudder_center, Vdelta_medium_range_valid))
       {
         if (rudder_center_shown == false)
